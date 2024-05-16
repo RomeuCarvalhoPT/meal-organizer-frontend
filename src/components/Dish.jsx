@@ -63,14 +63,16 @@ return (
   <Container maxWidth="sm">
     
     <Card>
-      <Fab size="small" color="secondary" aria-label="back">
-        <ArrowBackIcon onClick={goBack} />
-      </Fab>
-
-      {/* Render the rest of the dish details */}
-      <CardMedia component="img" alt={dish.name} height="140"  image={dish.picture}>
+      <div style={{ position: "relative" }}>
+        <CardMedia component="img" alt={dish.name} height="140"  image={dish.picture}>
 
       </CardMedia>
+         <div style={{position: "absolute", color: "red",top: "50%",left: "8%",transform: "translateX(-50%)",}}>
+            <Fab size="small" color="primary" aria-label="back">
+               <ArrowBackIcon onClick={goBack} />
+             </Fab>
+         </div>
+       </div>
       
       <CardContent>
 <Box>
@@ -84,7 +86,7 @@ return (
         <Typography variant="body2" color="textSecondary">
           Updated at: {new Date(dish.updatedAt).toLocaleDateString()}
         </Typography>
-  <Fab size="small" color="secondary" aria-label="back">
+  <Fab size="small" color="primary" aria-label="back">
       <EditIcon onClick={goToEdit}/>
   </Fab>
 

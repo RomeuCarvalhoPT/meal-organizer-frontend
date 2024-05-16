@@ -20,6 +20,7 @@
     import PhotoCameraRoundedIcon from "@material-ui/icons/PhotoCameraRounded";
     import AddIcon from "@mui/icons-material/Add";
     import InputAdornment from "@mui/material/InputAdornment";
+    import SaveIcon from '@mui/icons-material/Save';
     import Resizer from "react-image-file-resizer"; // Import Resizer
 
     const EditDish = () => {
@@ -52,7 +53,7 @@
       // Function to resize an image using React Image File Resizer
       const resizeImage = (file) => {
         return new Promise((resolve, reject) => {
-          Resizer.imageFileResizer(file, 300, 300, "JPEG", 80, 0, (uri) => {
+          Resizer.imageFileResizer(file, 600, 600, "JPEG", 100, 0, (uri) => {
             resolve(uri); // Returns the data URL of the resized image
           }, "file"); // Define the data type and quality for the resized image
         });
@@ -67,7 +68,8 @@
 
             if (resizedImage) {
               const formData = new FormData();
-              formData.append("image", resizedImage);
+              // Add a new image name
+              formData.append("image", resizedImage, `dish_${id}.jpg`); 
               try {
                 const response = await fetch(
                   `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/files/upload`,
@@ -83,6 +85,16 @@
 
                 const data = await response.json(); // Assuming the server responds with JSON containing the URL or identifier of the uploaded image
                 const newUrl = data.url; // Adjust according to the actual response structure
+// Force reload of the image, even if the URL is the same
+setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
+
+                console.log('Before update:', dish);
+                setDish({...dish, picture: newUrl });
+                console.log('After update:', dish);
+                setImage(dish.picture);
+                console.log('After setPicture:', dish);
+                setDish({...dish, picture: newUrl });
+                console.log('After update:', dish);
                 
               } catch (error) {
                 console.error(
@@ -136,7 +148,7 @@
             body: JSON.stringify(dish),
           });
           if (response.ok) {
-            history.push("/");
+            history.goBack();
           } else {
             console.error("Error saving dish:", response.statusText);
           }
@@ -192,10 +204,11 @@
         setIsAdding(false); // Reset the isAdding state
       };
       const goBack = () => {
-        history.push("/");
+        history.goBack();
       };
 
       return (
+        <Container maxWidth="sm">
         <Box
           sx={{
             "& .MuiTextField-root": { m: 1, width: "25ch" },
@@ -230,12 +243,15 @@
                   </IconButton>
                 </label>
               </div>
+            <div style={{position: "absolute", color: "red",top: "50%",left: "8%",transform: "translateX(-50%)",}}>
+              <Fab size="small" color="primary" aria-label="back">
+                <ArrowBackIcon onClick={goBack} />
+              </Fab>
+            </div>
           </div>
            
           <Card>
-            <Fab size="small" color="secondary" aria-label="back">
-              <ArrowBackIcon onClick={goBack} />
-            </Fab>
+
             <form onSubmit={handleSave}>
               <CardContent>
                 <TextField
@@ -256,7 +272,7 @@
                     <TextField {...params} label="Add Ingredient" />
                   )}
                 />
-                <Fab size="small" color="secondary" aria-label="back">
+                <Fab size="small" color="primary" aria-label="back">
                   <AddIcon onClick={handleAddIngredient} />
                 </Fab>
 
@@ -287,11 +303,15 @@
                     </ListItem>
                   ))}
                 </List>
-                <Button type="submit">Save</Button>
+                <Fab size="small" color="primary" aria-label="back" type="submit">
+                  <SaveIcon />
+                </Fab>
+
               </CardContent>
             </form>
           </Card>
         </Box>
+        </Container>
       );
     };
 

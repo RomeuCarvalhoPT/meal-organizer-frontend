@@ -1,6 +1,11 @@
 // src/App.js
-import React ,{ useEffect, useState }from "react";
-import { BrowserRouter as Router, Route, Link, useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  useHistory,
+} from "react-router-dom";
 import MenuGenerator from "./components/MenuGenerator";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -22,14 +27,15 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import Dish from "./components/Dish";
-
-
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
 
 const App = () => {
   const [dishes, setDishes] = useState([]);
   const history = useHistory();
+  const [anchorEl, setAnchorEl] = useState(null); // State for controlling the dropdown menu
   useEffect(() => {
     fetchDishes();
   }, []);
@@ -60,17 +66,14 @@ const App = () => {
     }
   };
 
-
   const handleShowDish = async (id) => {
     history.push(`/dish/${id}`); // Use template literals for string interpolation
   };
 
- 
-  function handleAddDish()  {
+  function handleAddDish() {
     history.push("/editDish");
-  };
+  }
 
-  
   const StyledFab = styled(Fab)({
     position: "absolute",
     zIndex: 1,
@@ -80,56 +83,94 @@ const App = () => {
     margin: "0 auto",
   });
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const navigateToWeeklyMenu = () => {
+    history.push("/weeklyMenu"); // Adjust the path according to your routing setup
+  };
+
+  const navigateToIngredients = () => {
+    history.push("/ingredients"); // Adjust the path according to your routing setup
+  };
+
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <Paper square sx={{ pb: "50px" }}>
-        <Typography
-          variant="h5"
-          gutterBottom
-          component="div"
-          sx={{ p: 2, pb: 0 }}
-        >
-          Dishes
-        </Typography>
-        <Container>
-        <List sx={{ mb: 2 }}>
-          {dishes.map(({ id, name, picture }) => (
-            <React.Fragment key={id}>
-              <ListItemButton>
-                <ListItemAvatar onClick={(event) => handleShowDish(id)}>
-                  <Avatar alt="Dish Picture" src={picture} />
-                </ListItemAvatar>
-                <ListItemText primary={name} onClick={(event) => handleShowDish(id)}/>
-                <Box display="flex" justifyContent="flex-end">
-                  <ListItemButton onClick={(event) => handleDelete(id)}>
-                    <DeleteIcon />
+    <Container maxWidth="sm">
+      <React.Fragment>
+        <CssBaseline />
+        <Paper square sx={{ pb: "50px" }}>
+          <Typography
+            variant="h5"
+            gutterBottom
+            component="div"
+            sx={{ p: 2, pb: 0 }}
+          >
+            Dishes
+          </Typography>
+          <Container>
+            <List sx={{ mb: 2 }}>
+              {dishes.map(({ id, name, picture }) => (
+                <React.Fragment key={id}>
+                  <ListItemButton>
+                    <ListItemAvatar onClick={(event) => handleShowDish(id)}>
+                      <Avatar alt="Dish Picture" src={picture} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={name}
+                      onClick={(event) => handleShowDish(id)}
+                    />
+                    <Box display="flex" justifyContent="flex-end">
+                      <ListItemButton onClick={(event) => handleDelete(id)}>
+                        <DeleteIcon />
+                      </ListItemButton>
+                    </Box>
                   </ListItemButton>
-                </Box>
-              </ListItemButton>
-            </React.Fragment>
-          ))}
-        </List>
+                </React.Fragment>
+              ))}
+            </List>
           </Container>
-      </Paper>
-      <AppBar position="fixed" color="primary" sx={{ top: "auto", bottom: 0 }}>
-        <Toolbar>
-          <IconButton color="inherit" aria-label="open drawer">
-            <MenuIcon />
-          </IconButton>
-          <StyledFab color="secondary" aria-label="add" onClick={() => handleAddDish()}>
-            <AddIcon />
-          </StyledFab>
-          <Box sx={{ flexGrow: 1 }} />
-          <IconButton color="inherit">
-            <SearchIcon />
-          </IconButton>
-          <IconButton color="inherit">
-            <MoreIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-    </React.Fragment>
+        </Paper>
+        <AppBar
+          position="fixed"
+          color="primary"
+          sx={{ top: "auto", bottom: 0 }}
+        >
+          <Toolbar>
+            <IconButton color="inherit" aria-label="open drawer" onClick={handleClick}>
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={navigateToWeeklyMenu}>Weekly Menu</MenuItem>
+              <MenuItem onClick={navigateToIngredients}>Ingredients</MenuItem>
+            </Menu>
+            <StyledFab
+              color="primary"
+              aria-label="add"
+              onClick={() => handleAddDish()}
+            >
+              <AddIcon />
+            </StyledFab>
+            <Box sx={{ flexGrow: 1 }} />
+            <IconButton color="inherit" >
+              <SearchIcon />
+            </IconButton>
+            <IconButton color="inherit" >
+              <MoreIcon />
+            </IconButton>
+            
+          </Toolbar>
+        </AppBar>
+      </React.Fragment>
+    </Container>
   );
 };
 
