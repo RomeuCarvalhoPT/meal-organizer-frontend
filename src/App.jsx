@@ -92,7 +92,7 @@ const App = () => {
   };
 
   const navigateToWeeklyMenu = () => {
-    history.push("/weeklyMenu"); // Adjust the path according to your routing setup
+    history.push("/menuGenerator"); // Adjust the path according to your routing setup
   };
 
   const navigateToIngredients = () => {
