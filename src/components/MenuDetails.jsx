@@ -14,12 +14,14 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
+import config from '../config.json';
 
 const MenuDetails = () => {
   const { id } = useParams();
   const history = useHistory();
   const [menu, setMenu] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const apiEndpoint = config.API_ENDPOINT;
 
   useEffect(() => {
     fetchMenuDetails();

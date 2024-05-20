@@ -5,6 +5,8 @@ import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import CircularProgress from '@mui/material/CircularProgress';
+import config from '../config.json';
+
 
 
 const Dish = () => {
@@ -12,7 +14,7 @@ const Dish = () => {
   const [dish, setDish] = useState({}); // Initialize state with an empty object
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const history = useHistory();
-
+  const apiEndpoint = config.API_ENDPOINT;
 
   const style = {
     py: 0,
@@ -32,7 +34,7 @@ const Dish = () => {
   
   const fetchDishDetails = async () => {
     try {
-      const response = await fetch(`https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/dishes/${id}`, {
+      const response = await fetch(apiEndpoint + `/dishes/${id}`, {
         method: "GET",
       });
       const dishData = await response.json();

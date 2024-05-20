@@ -1,5 +1,5 @@
 # Use node:14 as the base image
-FROM node:14
+FROM node:16-alpine
 
 # Create a working directory
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expose port 3000 for the React development server
-EXPOSE 5000
+EXPOSE 3000
 
 # Start the React development server
 CMD ["npm", "start"]

@@ -32,6 +32,7 @@ import Dish from "./components/Dish";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
 import CircularProgress from '@mui/material/CircularProgress';
+import config from './config.json';
 
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null); // State for controlling the dropdown menu
+  const apiEndpoint = config.API_ENDPOINT;
   useEffect(() => {
     fetchDishes();
   }, []);
@@ -46,8 +48,8 @@ const App = () => {
   const fetchDishes = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(
-        "https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/dishes"
+      const response = await fetch(apiEndpoint +
+        "/dishes"
       );
       const data = await response.json();
       setDishes(data);
@@ -60,8 +62,8 @@ const App = () => {
   const handleDelete = async (id) => {
     try {
 
-      await fetch(
-        `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/dishes/${id}`,
+      await fetch(apiEndpoint +
+        `/dishes/${id}`,
         {
           method: "DELETE",
         }

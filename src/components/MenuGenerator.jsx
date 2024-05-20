@@ -20,17 +20,19 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
+import config from '../config.json';
 
 const GenerateMenu = () => {
   const [numDishes, setNumDishes] = useState(5); // Default number of dishes
   const [dishes, setDishes] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const apiEndpoint = config.API_ENDPOINT;
 
   const handleGenerateMenu = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/menus/generate-menu/${numDishes}`, {
+      const response = await fetch(apiEndpoint +
+        `/menus/generate-menu/${numDishes}`, {
           method: "POST"      
         }
       );
@@ -45,8 +47,8 @@ const GenerateMenu = () => {
   const handleSaveMenu = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/menus/save`, {
+      const response = await fetch(apiEndpoint +
+        `/menus/save`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'

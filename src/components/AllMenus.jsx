@@ -17,20 +17,23 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
+import config from '../config.json';
+
+
 
 const AllMenus = () => {
   const [menus, setMenus] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
-
+  const apiEndpoint = config.API_ENDPOINT;
   useEffect(() => {
     fetchMenus();
   }, []);
 
   const fetchMenus = async () => {
     try {
-      const response = await fetch(
-        "https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/menus/all"
+      const response = await fetch(apiEndpoint +
+        "/menus/all"
       );
       const menusData = await response.json();
       setMenus(menusData);
@@ -44,7 +47,7 @@ const AllMenus = () => {
   const handleDelete = async (menuId) => {
     try {
       const response = await fetch(
-        `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/menus/${menuId}`,
+        `${apiEndpoint}/menus/${menuId}`,
         {
           method: "DELETE",
         }
@@ -110,16 +113,15 @@ const AllMenus = () => {
                 <ListItem
                   key={menu.id}
                   button
-                  onClick={() => handleMenuClick(menu.id)}
-                >                
+                  onClick={() => handleMenuClick(menu.id)} >                
                   <ListItemText
-                    primary=<ul>
+                    primary={<ul>
                       {menu.Dishes?.map((dish) => (
                           <li key={dish.name}>
                             {dish.name}
                           </li>
                       ))}
-                    </ul>
+                    </ul>}
                     secondary={`Created at ${new Date(
                       menu.createdAt
                     ).toLocaleString()}`}

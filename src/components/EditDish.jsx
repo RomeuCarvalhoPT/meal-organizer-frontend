@@ -23,6 +23,8 @@
     import SaveIcon from '@mui/icons-material/Save';
     import Resizer from "react-image-file-resizer"; // Import Resizer
     import CircularProgress from '@mui/material/CircularProgress';
+import config from '../config.json';
+    
 
     const EditDish = () => {
       const { id } = useParams();
@@ -34,6 +36,7 @@
       const [selectedIngredient, setSelectedIngredient] = useState(null);
       const [isAdding, setIsAdding] = useState(false); // State to track if the "+" button is pressed
       const [image, setImage] = useState("");
+      const apiEndpoint = config.API_ENDPOINT;
       const isMobileDevice = () => {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           navigator.userAgent
@@ -72,8 +75,8 @@
               // Add a new image name
               formData.append("image", resizedImage, `dish_${id}.jpg`); 
               try {
-                const response = await fetch(
-                  `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/files/upload`,
+                const response = await fetch(apiEndpoint +
+                  `/files/upload`,
                   {
                     method: "POST",
                     body: formData,
@@ -110,8 +113,8 @@ setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
 
       const fetchDishDetails = async () => {
         try {
-          const response = await fetch(
-            `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/dishes/${id}`
+          const response = await fetch(apiEndpoint +
+            `/dishes/${id}`
           );
           const dishData = await response.json();
           setDish(dishData);
@@ -124,8 +127,8 @@ setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
 
       const fetchIngredients = async () => {
         try {
-          const response = await fetch(
-            "https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/ingredients"
+          const response = await fetch(apiEndpoint +
+            "/ingredients"
           );
           const ingredientData = await response.json();
           setIngredients(ingredientData);
@@ -145,7 +148,7 @@ setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
       const handleSave = async (e) => {
         e.preventDefault();
         try {
-          const url = `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/dishes`;
+          const url = apiEndpoint + `/dishes`;
           const method = id ? "PUT" : "POST";
           const response = await fetch(id ? `${url}/${id}` : url, {
             method: method,
