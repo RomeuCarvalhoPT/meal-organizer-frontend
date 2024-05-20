@@ -11,16 +11,19 @@ import {
   ListItemText,
   CardMedia,
   Divider,
+  Fab,
   Typography
 } from "@mui/material";
 import { Unstable_NumberInput as BaseNumberInput } from '@mui/base/Unstable_NumberInput';
 import { styled } from '@mui/system';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const GenerateMenu = () => {
   const [numDishes, setNumDishes] = useState(5); // Default number of dishes
-  const [menu, setMenu] = useState(null);
+  const [dishes, setDishes] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateMenu = async () => {
@@ -28,17 +31,48 @@ const GenerateMenu = () => {
     try {
       const response = await fetch(
         `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/menus/generate-menu/${numDishes}`, {
-          method: "POST",
+          method: "POST"      
         }
       );
       const menuData = await response.json();
-      setMenu(menuData);
+      setDishes(menuData);
       setIsLoading(false);
     } catch (error) {
-      console.error("Error generating menu:", error);
       setIsLoading(false);
     }
   };
+
+  const handleSaveMenu = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/menus/save`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dishes)
+        }
+      );
+      const responseText = await response.json();
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error saving menu:", error);
+      alert("Error saving menu. Please try again later."); // Display a user-friendly error message
+      setIsLoading(false);
+    }
+  };
+  const goBack = () => {
+    window.history.back();
+  }
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth="sm">
@@ -49,9 +83,12 @@ const GenerateMenu = () => {
         noValidate
         autoComplete="off"
       >
-        <Card>
+        <Card> 
+          <Fab size="small" color="primary" aria-label="back" onClick={goBack}>
+            <ArrowBackIcon />
+          </Fab>
           <CardContent>
-            <NumberInput aria-label="Num Dishes" min={1} max={10} value={numDishes} onChange={(event, val) => setNumDishes(val)}/>
+            <NumberInput label="Required" aria-label="Num Dishes" min={1} max={10} value={numDishes} onChange={(event, val) => setNumDishes(val)}/>
             <Button
               variant="contained"
               color="primary"
@@ -63,7 +100,7 @@ const GenerateMenu = () => {
           </CardContent>
         </Card>
         {isLoading && <div>Loading...</div>}
-        {menu && (
+        {dishes && (
           <Card sx={{ mt: 2 }}>
             <Typography variant="h4" component="h3">
               Generated Menu
@@ -71,8 +108,8 @@ const GenerateMenu = () => {
             <CardContent>
              
               <List >
-                {menu.Dishes.map((dish) => (
-             <React.Fragment >
+                {dishes.dishes.map((dish) => (
+              <React.Fragment >
                   <ListItem key={dish.id}>
                     <ListItemText
                       primary={dish.name}
@@ -99,6 +136,14 @@ const GenerateMenu = () => {
                </React.Fragment>
                 ))}           
               </List>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSaveMenu}
+                disabled={isLoading}
+              >
+                Save
+              </Button>
             </CardContent>
           </Card>
         )}

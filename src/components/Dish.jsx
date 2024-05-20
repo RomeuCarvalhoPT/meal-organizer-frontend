@@ -4,6 +4,7 @@ import {Box, Fab, Button, Container, Card, CardContent, CardMedia, Typography, L
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const Dish = () => {
@@ -45,7 +46,11 @@ const Dish = () => {
 
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   

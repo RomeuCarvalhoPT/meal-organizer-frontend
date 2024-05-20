@@ -31,10 +31,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Dish from "./components/Dish";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 const App = () => {
   const [dishes, setDishes] = useState([]);
   const history = useHistory();
+  const [isLoading, setIsLoading] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null); // State for controlling the dropdown menu
   useEffect(() => {
     fetchDishes();
@@ -42,11 +45,13 @@ const App = () => {
 
   const fetchDishes = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(
         "https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/dishes"
       );
       const data = await response.json();
       setDishes(data);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching dishes:", error);
     }
@@ -54,6 +59,7 @@ const App = () => {
 
   const handleDelete = async (id) => {
     try {
+
       await fetch(
         `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/dishes/${id}`,
         {
@@ -61,6 +67,7 @@ const App = () => {
         }
       );
       setDishes(dishes.filter((dish) => dish.id !== id));
+
     } catch (error) {
       console.error("Error deleting dish:", error);
     }
@@ -92,13 +99,22 @@ const App = () => {
   };
 
   const navigateToWeeklyMenu = () => {
-    history.push("/menuGenerator"); // Adjust the path according to your routing setup
+    history.push("/allMenus"); // Adjust the path according to your routing setup
   };
 
   const navigateToIngredients = () => {
     history.push("/ingredients"); // Adjust the path according to your routing setup
   };
 
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+  
   return (
     <Container maxWidth="sm">
       <React.Fragment>

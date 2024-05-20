@@ -22,6 +22,7 @@
     import InputAdornment from "@mui/material/InputAdornment";
     import SaveIcon from '@mui/icons-material/Save';
     import Resizer from "react-image-file-resizer"; // Import Resizer
+    import CircularProgress from '@mui/material/CircularProgress';
 
     const EditDish = () => {
       const { id } = useParams();
@@ -134,7 +135,11 @@ setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
       };
 
       if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+          <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box>
+        );
       }
 
       const handleSave = async (e) => {
@@ -206,6 +211,14 @@ setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
       const goBack = () => {
         history.goBack();
       };
+
+      if (isLoading) {
+        return (
+          <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box>
+        );
+      }
 
       return (
         <Container maxWidth="sm">
