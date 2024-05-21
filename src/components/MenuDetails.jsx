@@ -14,14 +14,15 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
-import config from '../config.json';
+
 
 const MenuDetails = () => {
   const { id } = useParams();
   const history = useHistory();
   const [menu, setMenu] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const apiEndpoint = config.API_ENDPOINT;
+  //const apiEndpoint = config.API_ENDPOINT;
+  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
 
   useEffect(() => {
     fetchMenuDetails();
@@ -29,13 +30,14 @@ const MenuDetails = () => {
 
   const fetchMenuDetails = async () => {
     try {
-      const response = await fetch(
-        `https://b9dc757f-9d7d-4606-bcdd-6b1a7ecc5dfb-00-2x24kmucxylkj.worf.replit.dev/menus/${id}`,
+      const response = await fetch(apiEndpoint +
+        `/menus/${id}`,
         {
           method: "GET",
+          mode: 'no-cors',
           contentType: "application/json",
         }
-      );;
+      );
       const menuData = await response.json();
       setMenu(menuData);
       setIsLoading(false);

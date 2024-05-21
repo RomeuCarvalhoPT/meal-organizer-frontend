@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import CircularProgress from '@mui/material/CircularProgress';
-import config from '../config.json';
+
 
 
 
@@ -14,7 +14,7 @@ const Dish = () => {
   const [dish, setDish] = useState({}); // Initialize state with an empty object
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const history = useHistory();
-  const apiEndpoint = config.API_ENDPOINT;
+  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
 
   const style = {
     py: 0,

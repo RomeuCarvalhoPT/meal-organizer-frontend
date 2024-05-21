@@ -32,7 +32,7 @@ import Dish from "./components/Dish";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
 import CircularProgress from '@mui/material/CircularProgress';
-import config from './config.json';
+
 
 
 const App = () => {
@@ -40,7 +40,7 @@ const App = () => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null); // State for controlling the dropdown menu
-  const apiEndpoint = config.API_ENDPOINT;
+  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
   useEffect(() => {
     fetchDishes();
   }, []);

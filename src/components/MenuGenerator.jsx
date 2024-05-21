@@ -20,13 +20,13 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
-import config from '../config.json';
+
 
 const GenerateMenu = () => {
   const [numDishes, setNumDishes] = useState(5); // Default number of dishes
   const [dishes, setDishes] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const apiEndpoint = config.API_ENDPOINT;
+  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
 
   const handleGenerateMenu = async () => {
     setIsLoading(true);

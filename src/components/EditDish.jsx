@@ -23,7 +23,7 @@
     import SaveIcon from '@mui/icons-material/Save';
     import Resizer from "react-image-file-resizer"; // Import Resizer
     import CircularProgress from '@mui/material/CircularProgress';
-import config from '../config.json';
+
     
 
     const EditDish = () => {
@@ -36,7 +36,7 @@ import config from '../config.json';
       const [selectedIngredient, setSelectedIngredient] = useState(null);
       const [isAdding, setIsAdding] = useState(false); // State to track if the "+" button is pressed
       const [image, setImage] = useState("");
-      const apiEndpoint = config.API_ENDPOINT;
+      const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
       const isMobileDevice = () => {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           navigator.userAgent

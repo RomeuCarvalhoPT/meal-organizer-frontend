@@ -5,8 +5,10 @@
   "main": "index.html",
   "scripts": {
     "build": "vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "start": "vite preview"
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",

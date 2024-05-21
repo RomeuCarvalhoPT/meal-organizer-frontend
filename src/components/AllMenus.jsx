@@ -17,15 +17,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
-import config from '../config.json';
-
 
 
 const AllMenus = () => {
   const [menus, setMenus] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
-  const apiEndpoint = config.API_ENDPOINT;
+  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
   useEffect(() => {
     fetchMenus();
   }, []);
