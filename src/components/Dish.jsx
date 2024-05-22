@@ -14,7 +14,9 @@ const Dish = () => {
   const [dish, setDish] = useState({}); // Initialize state with an empty object
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const history = useHistory();
-  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
+  const apiEndpoint = window.ENV.API_ENDPOINT;
+
+  
 
   const style = {
     py: 0,

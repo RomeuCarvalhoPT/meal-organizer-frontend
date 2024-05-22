@@ -23,7 +23,7 @@ const AllMenus = () => {
   const [menus, setMenus] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
-  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
+  const apiEndpoint = window.ENV.API_ENDPOINT;
   useEffect(() => {
     fetchMenus();
   }, []);

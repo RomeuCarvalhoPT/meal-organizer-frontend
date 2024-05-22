@@ -26,7 +26,7 @@ const GenerateMenu = () => {
   const [numDishes, setNumDishes] = useState(5); // Default number of dishes
   const [dishes, setDishes] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
+  const apiEndpoint = window.ENV.API_ENDPOINT;
 
   const handleGenerateMenu = async () => {
     setIsLoading(true);

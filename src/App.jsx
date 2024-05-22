@@ -40,7 +40,7 @@ const App = () => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null); // State for controlling the dropdown menu
-  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
+  const apiEndpoint = window.ENV.API_ENDPOINT;
   useEffect(() => {
     fetchDishes();
   }, []);

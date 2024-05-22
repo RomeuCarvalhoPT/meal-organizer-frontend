@@ -22,7 +22,7 @@ const MenuDetails = () => {
   const [menu, setMenu] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   //const apiEndpoint = config.API_ENDPOINT;
-  const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
+  const apiEndpoint = window.ENV.API_ENDPOINT;
 
   useEffect(() => {
     fetchMenuDetails();
@@ -34,7 +34,6 @@ const MenuDetails = () => {
         `/menus/${id}`,
         {
           method: "GET",
-          mode: 'no-cors',
           contentType: "application/json",
         }
       );
