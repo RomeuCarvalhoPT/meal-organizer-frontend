@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
+import Image_not_available from '../images/Image_not_available.png';
 
 
 const MenuDetails = () => {
@@ -107,12 +108,22 @@ const MenuDetails = () => {
                     primary={dish.name}
                     secondary={
                       <div>
-                        <CardMedia
-                          component="img"
-                          height="140"
-                          image={dish.picture}
-                          alt={dish.name}
-                        />
+                        {dish.picture && (
+                           <CardMedia 
+                             component="img" 
+                             alt={dish.picture} 
+                             height="140" 
+                             image={dish.picture} 
+                             sx={{ objectFit: "cover", h: '10%'  }}/>
+                        )}
+                          {!dish.picture && (
+                             <CardMedia 
+                               component="img" 
+                               alt={dish.picture ? dish.name : ""} 
+                               height="140" 
+                               sx={{ objectFit: "contain" }} 
+                               image={Image_not_available}/>
+                          )}
                         <ul>
                           {dish.Ingredients.map((ingredient) => (
                             <li key={ingredient.id}>
@@ -131,7 +142,7 @@ const MenuDetails = () => {
             </Typography>
             <List >
               {Object.keys(sortedShoppingList).map((ingredientName) => (
-                <ListItem key={ingredientName} alignItems="flex-end">
+                <ListItem key={ingredientName} >
                   <ListItemText
                     primary={ingredientName}
                   />     

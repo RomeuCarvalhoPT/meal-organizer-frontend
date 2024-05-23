@@ -143,9 +143,11 @@ const App = () => {
                       onClick={(event) => handleShowDish(id)}
                     />
                     <Box display="flex" justifyContent="flex-end">
-                      <ListItemButton onClick={(event) => handleDelete(id)}>
-                        <DeleteIcon />
-                      </ListItemButton>
+                        <IconButton
+                          aria-label="delete"
+                          onClick={(event) => handleDelete(id)}>
+                          <DeleteIcon />
+                        </IconButton>
                     </Box>
                   </ListItemButton>
                 </React.Fragment>
@@ -178,12 +180,7 @@ const App = () => {
               <AddIcon />
             </StyledFab>
             <Box sx={{ flexGrow: 1 }} />
-            <IconButton color="inherit" >
-              <SearchIcon />
-            </IconButton>
-            <IconButton color="inherit" >
-              <MoreIcon />
-            </IconButton>
+
             
           </Toolbar>
         </AppBar>

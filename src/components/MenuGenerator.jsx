@@ -20,6 +20,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
+import Image_not_available from '../images/Image_not_available.png';
 
 
 const GenerateMenu = () => {
@@ -97,7 +98,7 @@ const GenerateMenu = () => {
               onClick={handleGenerateMenu}
               disabled={isLoading}
             >
-              Generate
+              New Menu
             </Button>
           </CardContent>
         </Card>
@@ -117,12 +118,22 @@ const GenerateMenu = () => {
                       primary={dish.name}
                       secondary={
                         <div>
-                          <CardMedia
-                            component="img"
-                            height="140"
-                            image={dish.picture}
-                            alt={dish.name}
-                          />
+                          {dish.picture && (
+                             <CardMedia 
+                               component="img" 
+                               alt={dish.picture} 
+                               height="140" 
+                               image={dish.picture} 
+                               sx={{ objectFit: "cover", h: '10%'  }}/>
+                          )}
+                            {!dish.picture && (
+                               <CardMedia 
+                                 component="img" 
+                                 alt={dish.picture ? dish.name : ""} 
+                                 height="140" 
+                                 sx={{ objectFit: "contain" }} 
+                                 image={Image_not_available}/>
+                            )}
                           <ul>
                             {dish.Ingredients.map((ingredient) => (
                               <li key={ingredient.id}>

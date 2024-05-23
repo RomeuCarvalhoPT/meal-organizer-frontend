@@ -23,6 +23,7 @@
     import SaveIcon from '@mui/icons-material/Save';
     import Resizer from "react-image-file-resizer"; // Import Resizer
     import CircularProgress from '@mui/material/CircularProgress';
+import Image_not_available from '../images/Image_not_available.png';
 
     
 
@@ -146,6 +147,7 @@ setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
       }
 
       const handleSave = async (e) => {
+        setIsLoading(true);
         e.preventDefault();
         try {
           const url = apiEndpoint + `/dishes`;
@@ -156,11 +158,15 @@ setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
             body: JSON.stringify(dish),
           });
           if (response.ok) {
-            history.goBack();
+            setIsLoading(false);
+            const data = await response.json();
+            history.push(`/dish/${data.id}`);
           } else {
+            setIsLoading(false);
             console.error("Error saving dish:", response.statusText);
           }
         } catch (error) {
+          setIsLoading(false);
           console.error("Error saving dish:", error);
         }
       };
@@ -233,13 +239,13 @@ setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
           autoComplete="off"
         >
           <div style={{ position: "relative" }}>
-            <CardMedia
-              component="img"
-              alt={dish.name}
-              height="140"
-              image={dish.picture}
-              onChange={(e) => setDish({...dish, picture: e.target.value })}
-            />
+
+            {dish.picture && (
+               <CardMedia component="img" alt={dish.picture} height="140" image={dish.picture} sx={{ objectFit: "cover", h: '10%'  }} onChange={(e) => setDish({...dish, picture: e.target.value })}/>
+            )}
+              {!dish.picture && (
+                 <CardMedia component="img" alt={dish.picture ? dish.name : ""} height="140" sx={{ objectFit: "contain" }} image={dish.picture ? dish.picture : Image_not_available}/>
+              )}
               <div style={{position: "absolute", color: "red",top: "50%",left: "50%",transform: "translateX(-50%)",}}>
                 <input
                   accept="image/*"
@@ -305,13 +311,19 @@ setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
                             e.target.value;
                           setDish({ ...dish, Ingredients: newIngredients });
                         }}
+                        style={{ width: "13ch" }}
                         sx={{
-                          width: "50px",
-                          textAlign: "right", // Align text to the right
+                           textAlign: "right", // Align text to the right
                           "&.MuiInputBase-input": {
                             paddingRight: "1px", // Add padding to the right of the input to accommodate the adornment
+                            // Add a right border to visually separate the input field from the icon
+                            borderRight: "1px solid #ccc",
+                            // Adjust the margin to create a small gap between the input and the icon
+                            marginRight: "10px", 
+                            width: "1ch"
                           },
                         }}
+                       
                       />
                       <IconButton onClick={() => removeIngredient(index)}>
                         <DeleteIcon />

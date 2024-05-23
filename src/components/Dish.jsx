@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import CircularProgress from '@mui/material/CircularProgress';
+import Image_not_available from '../images/Image_not_available.png';
 
 
 
@@ -70,12 +71,14 @@ const Dish = () => {
 if(!isLoading){
 return (
   <Container maxWidth="sm">
-    
     <Card>
       <div style={{ position: "relative" }}>
-        <CardMedia component="img" alt={dish.name} height="140"  image={dish.picture}>
-
-      </CardMedia>
+      {dish.picture && (
+         <CardMedia component="img" alt={dish.picture} height="140" image={dish.picture} sx={{ objectFit: "cover", h: '10%'  }}/>
+      )}
+        {!dish.picture && (
+           <CardMedia component="img" alt={dish.picture ? dish.name : ""} height="140" sx={{ objectFit: "contain" }} image={dish.picture ? dish.picture : Image_not_available}/>
+        )}
          <div style={{position: "absolute", color: "red",top: "50%",left: "8%",transform: "translateX(-50%)",}}>
             <Fab size="small" color="primary" aria-label="back">
                <ArrowBackIcon onClick={goBack} />
@@ -84,7 +87,7 @@ return (
        </div>
       
       <CardContent>
-<Box>
+     <Box>
   
         <Typography variant="h5" component="h2">
           {dish.name}         
@@ -95,11 +98,11 @@ return (
         <Typography variant="body2" color="textSecondary">
           Updated at: {new Date(dish.updatedAt).toLocaleDateString()}
         </Typography>
-  <Fab size="small" color="primary" aria-label="back">
-      <EditIcon onClick={goToEdit}/>
-  </Fab>
+        <Fab size="small" color="primary" aria-label="back">
+          <EditIcon onClick={goToEdit}/>
+        </Fab>
 
-  </Box>
+      </Box>
         <Typography variant="h6" component="h3">
           Ingredients:
         </Typography>

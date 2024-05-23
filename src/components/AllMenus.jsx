@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
+import AddIcon from "@mui/icons-material/Add";
 
 
 const AllMenus = () => {
@@ -91,21 +92,17 @@ const AllMenus = () => {
       >
         <Card>
           <CardContent>
+
             <Fab size="small" color="primary" aria-label="back" onClick={goBack}>
               <ArrowBackIcon />
             </Fab>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={generateMenu}
-              disabled={isLoading}
-              style={{display: 'block', margin: 'auto'}} // Added style for center alignment
-            >
-              Generate
-            </Button>
-            <Typography variant="h4" component="h3">
-              Saved Menus
-            </Typography>
+            <Fab size="small" color="primary" aria-label="back" style={{position:"relative", left:"75%"}}>  
+              <AddIcon onClick={generateMenu} />
+            </Fab>
+
+              <Typography variant="h4" component="h3">
+                Saved Menus
+              </Typography>
             <List>
               {menus.map((menu) => (
                 <ListItem
