@@ -1,20 +1,15 @@
-# Use node:14 as the base image
-FROM node:16-alpine
-
-# Create a working directory
+FROM node:16-alpine as build
 WORKDIR /app
-
-# Copy the package.json and package-lock.json files
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of the project files
 COPY . .
+RUN npm run build
 
-# Expose port 3000 for the React development server
+# Stage 2: Serve the app with `serve`
+FROM node:16-alpine
+WORKDIR /app
+COPY --from=build /app/dist ./dist
+RUN npm install -g serve
+
 EXPOSE 3000
-
-# Start the React development server
-CMD ["npm", "start"]
+CMD ["serve", "-s", "dist", "-l", "3000"]
