@@ -21,7 +21,7 @@
     import AddIcon from "@mui/icons-material/Add";
     import InputAdornment from "@mui/material/InputAdornment";
     import SaveIcon from '@mui/icons-material/Save';
-    import Resizer from "react-image-file-resizer"; // Import Resizer
+    import Resizer from "./Resizer"; // Import Resizer
     import CircularProgress from '@mui/material/CircularProgress';
 import Image_not_available from '../images/Image_not_available.png';
 
