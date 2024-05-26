@@ -76,6 +76,7 @@ import Image_not_available from '../images/Image_not_available.png';
               // Add a new image name
               formData.append("image", resizedImage, `dish_${id}.jpg`); 
               try {
+                setIsLoading(true);
                 const response = await fetch(apiEndpoint +
                   `/files/upload`,
                   {
@@ -83,7 +84,7 @@ import Image_not_available from '../images/Image_not_available.png';
                     body: formData,
                   }
                 );
-
+                setIsLoading(false);
                 if (!response.ok) {
                   throw new Error("Network response was not ok");
                 }
@@ -91,8 +92,7 @@ import Image_not_available from '../images/Image_not_available.png';
                 const data = await response.json(); // Assuming the server responds with JSON containing the URL or identifier of the uploaded image
                 const newUrl = data.url; // Adjust according to the actual response structure
 // Force reload of the image, even if the URL is the same
-                setDish({ ...dish, picture: `${dish.picture}?_=${Date.now()}` });
-
+                setDish({ ...dish, picture: `${newUrl}?_=${Date.now()}`});
 
                 //setDish({...dish, picture: `${newUrl}?${Date.now()}` });
             

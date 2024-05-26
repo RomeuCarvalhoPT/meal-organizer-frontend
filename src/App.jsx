@@ -53,6 +53,7 @@ const App = () => {
       );
       const data = await response.json();
       setDishes(data);
+
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching dishes:", error);
