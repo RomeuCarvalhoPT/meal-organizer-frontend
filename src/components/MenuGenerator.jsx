@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
 import {
   Box,
   Card,
   CardContent,
   Container,
-  TextField,
   Button,
   List,
   ListItem,
@@ -12,7 +12,12 @@ import {
   CardMedia,
   Divider,
   Fab,
-  Typography
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton
 } from "@mui/material";
 import { Unstable_NumberInput as BaseNumberInput } from '@mui/base/Unstable_NumberInput';
 import { styled } from '@mui/system';
@@ -22,23 +27,36 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
 import Image_not_available from '../images/Image_not_available.png';
 
-
 const GenerateMenu = () => {
-  const [numDishes, setNumDishes] = useState(5); // Default number of dishes
-  const [dishes, setDishes] = useState(null);
+  const history = useHistory();
+  const [numDishes, setNumDishes] = useState(5);
+  const [menuDishes, setMenuDishes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [availableDishes, setAvailableDishes] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const apiEndpoint = window.ENV.API_ENDPOINT;
+
+  useEffect(() => {
+    const fetchAvailableDishes = async () => {
+      try {
+        const response = await fetch(apiEndpoint + `/dishes`);
+        const data = await response.json();
+        setAvailableDishes(data);
+      } catch (error) {
+        console.error("Error fetching dishes:", error);
+      }
+    };
+    fetchAvailableDishes();
+  }, [apiEndpoint]);
 
   const handleGenerateMenu = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(apiEndpoint +
-        `/menus/generate-menu/${numDishes}`, {
-          method: "POST"      
-        }
-      );
+      const response = await fetch(apiEndpoint + `/menus/generate-menu/${numDishes}`, {
+        method: "POST"
+      });
       const menuData = await response.json();
-      setDishes(menuData);
+      setMenuDishes(menuData.dishes);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -48,26 +66,41 @@ const GenerateMenu = () => {
   const handleSaveMenu = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(apiEndpoint +
-        `/menus/save`, {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(dishes)
-        }
-      );
+      const response = await fetch(apiEndpoint + `/menus/save`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ dishes: menuDishes })
+      });
       const responseText = await response.json();
       setIsLoading(false);
+      history.push(`/allMenus`);
     } catch (error) {
       console.error("Error saving menu:", error);
-      alert("Error saving menu. Please try again later."); // Display a user-friendly error message
+      alert("Error saving menu. Please try again later.");
       setIsLoading(false);
     }
   };
+
   const goBack = () => {
-    window.history.back();
-  }
+    history.back();
+  };
+
+  const handleAddDish = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleSelectDish = (dish) => {
+    setMenuDishes([...menuDishes, dish]);
+    setIsDialogOpen(false);
+  };
+
+  const handleRemoveDish = (index) => {
+    const newMenuDishes = menuDishes.slice();
+    newMenuDishes.splice(index, 1);
+    setMenuDishes(newMenuDishes);
+  };
 
   if (isLoading) {
     return (
@@ -86,80 +119,123 @@ const GenerateMenu = () => {
         noValidate
         autoComplete="off"
       >
-        <Card> 
-          <Fab size="small" color="primary" aria-label="back" onClick={goBack}>
-            <ArrowBackIcon />
-          </Fab>
+        <Card>
+          <div style={{ position: "relative" }}>
+            <Typography  variant="h6" component="h3" style={{textAlign: "center"}}>
+              Compose Menu
+            </Typography>
+               <div style={{position: "absolute", color: "red",top: "50%",left: "8%",transform: "translateX(-50%)",}}>
+                  <Fab size="small" color="primary" aria-label="back">
+                     <ArrowBackIcon onClick={goBack} />
+                   </Fab>
+               </div>
+             </div>
+
           <CardContent>
-            <NumberInput label="Required" aria-label="Num Dishes" min={1} max={10} value={numDishes} onChange={(event, val) => setNumDishes(val)}/>
+<Box>
+            <NumberInput
+              label="Required"
+              aria-label="Num Dishes"
+              min={1}
+              max={10}
+              value={numDishes}
+              style={{ width: "13ch", marginLeft: '40px', marginRight: '15px' }}
+              onChange={(event, val) => setNumDishes(val)}
+            />
+
             <Button
               variant="contained"
               color="primary"
               onClick={handleGenerateMenu}
               disabled={isLoading}
+              style={{  marginLeft: '40px', marginRight: '40px' }}
             >
-              New Menu
+              Randomize
             </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddDish}
+            >
+              <AddIcon /> Add Dish
+            </Button>
+  </Box>
           </CardContent>
         </Card>
-        {isLoading && <div>Loading...</div>}
-        {dishes && (
-          <Card sx={{ mt: 2 }}>
-            <Typography variant="h4" component="h3">
-              Generated Menu
-            </Typography>
-            <CardContent>
-             
-              <List >
-                {dishes.dishes.map((dish) => (
-              <React.Fragment >
-                  <ListItem key={dish.id}>
+        <Card sx={{ mt: 2 }}>
+
+          <CardContent>
+            <List>
+              {menuDishes && menuDishes.map((dish, index) => (
+                <React.Fragment key={dish.id}>
+                  <ListItem>
                     <ListItemText
                       primary={dish.name}
                       secondary={
                         <div>
-                          {dish.picture && (
-                             <CardMedia 
-                               component="img" 
-                               alt={dish.picture} 
-                               height="140" 
-                               image={dish.picture} 
-                               sx={{ objectFit: "cover", h: '10%'  }}/>
+                          {dish.picture ? (
+                            <CardMedia
+                              component="img"
+                              alt={dish.name}
+                              height="140"
+                              image={dish.picture}
+                              sx={{ objectFit: "cover" }}
+                            />
+                          ) : (
+                            <CardMedia
+                              component="img"
+                              alt=""
+                              height="140"
+                              sx={{ objectFit: "contain" }}
+                              image={Image_not_available}
+                            />
                           )}
-                            {!dish.picture && (
-                               <CardMedia 
-                                 component="img" 
-                                 alt={dish.picture ? dish.name : ""} 
-                                 height="140" 
-                                 sx={{ objectFit: "contain" }} 
-                                 image={Image_not_available}/>
-                            )}
                           <ul>
-                            {dish.Ingredients.map((ingredient) => (
+                            {dish.ingredients &&   dish.ingredients.map((ingredient) => (
                               <li key={ingredient.id}>
-                                {ingredient.name} - {ingredient.DishIngredient.quantity}
+                                {ingredient.name} - {ingredient.quantity}
                               </li>
                             ))}
                           </ul>
                         </div>
                       }
                     />
+                    <IconButton edge="end" aria-label="delete" onClick={() => handleRemoveDish(index)}>
+                      <RemoveIcon />
+                    </IconButton>
                   </ListItem>
-               <Divider />
-               </React.Fragment>
-                ))}           
-              </List>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSaveMenu}
-                disabled={isLoading}
-              >
-                Save
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+                  <Divider />
+                </React.Fragment>
+              ))}
+            </List>
+
+          </CardContent>
+        </Card>
+        <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+          <DialogTitle>Select a Dish</DialogTitle>
+          <DialogContent>
+            <List>
+              {availableDishes.map((dish) => (
+                <ListItem button onClick={() => handleSelectDish(dish)} key={dish.id}>
+                  <ListItemText primary={dish.name} />
+                </ListItem>
+              ))}
+            </List>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+      <Box sx={{ mt: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSaveMenu}
+          disabled={isLoading}
+        >
+          Save
+        </Button>
       </Box>
     </Container>
   );
@@ -297,17 +373,5 @@ const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
     />
   );
 });
-
-
-
-const listStyle = {
-  py: 0,
-  width: '100%',
-  maxWidth: 360,
-  borderRadius: 2,
-  border: '1px solid',
-  borderColor: 'divider',
-  backgroundColor: 'background.paper',
-};
 
 export default GenerateMenu;
