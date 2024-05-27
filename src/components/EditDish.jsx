@@ -92,7 +92,7 @@ import Image_not_available from '../images/Image_not_available.png';
                 const data = await response.json(); // Assuming the server responds with JSON containing the URL or identifier of the uploaded image
                 const newUrl = data.url; // Adjust according to the actual response structure
 // Force reload of the image, even if the URL is the same
-                setDish({ ...dish, picture: `${newUrl}?_=${Date.now()}`});
+                setDish({ ...dish, picture: `${newUrl}?${Date.now()}`});
 
                 //setDish({...dish, picture: `${newUrl}?${Date.now()}` });
             
