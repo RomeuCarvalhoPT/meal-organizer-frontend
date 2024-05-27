@@ -33,6 +33,7 @@ import Image_not_available from '../images/Image_not_available.png';
       const [dish, setDish] = useState({ name: "", picture: "", Ingredients: [] });
       const [ingredients, setIngredients] = useState([]);
       const [isLoading, setIsLoading] = useState(true);
+      const [isImageLoading, setIsImageLoading] = useState(false);
       const [inputValue, setInputValue] = useState("");
       const [selectedIngredient, setSelectedIngredient] = useState(null);
       const [isAdding, setIsAdding] = useState(false); // State to track if the "+" button is pressed
@@ -76,7 +77,7 @@ import Image_not_available from '../images/Image_not_available.png';
               // Add a new image name
               formData.append("image", resizedImage, `dish_${id}.jpg`); 
               try {
-                setIsLoading(true);
+                setIsImageLoading(true);
                 const response = await fetch(apiEndpoint +
                   `/files/upload`,
                   {
@@ -84,8 +85,9 @@ import Image_not_available from '../images/Image_not_available.png';
                     body: formData,
                   }
                 );
-                setIsLoading(false);
+                  setIsImageLoading(false);
                 if (!response.ok) {
+                  setIsImageLoading(false);
                   throw new Error("Network response was not ok");
                 }
 
@@ -100,12 +102,13 @@ import Image_not_available from '../images/Image_not_available.png';
                
                 //setDish({...dish, picture: newUrl });
               
-                
+                setIsImageLoading(false);
               } catch (error) {
                 console.error(
                   "There was a problem with the fetch operation:",
                   error
                 );
+                setIsImageLoading(false);
               }
             }
           }
@@ -232,20 +235,32 @@ import Image_not_available from '../images/Image_not_available.png';
       return (
         <Container maxWidth="sm">
         <Box
-          sx={{
-            "& .MuiTextField-root": { m: 1, width: "25ch" },
-          }}
+          sx={{"& .MuiTextField-root": { m: 1, width: "25ch" },}}
           noValidate
-          autoComplete="off"
-        >
+          autoComplete="off">
           <div style={{ position: "relative" }}>
-
             {dish.picture && (
-               <CardMedia component="img" alt={dish.picture} height="140" image={dish.picture} sx={{ objectFit: "cover", h: '10%'  }} onChange={(e) => setDish({...dish, picture: e.target.value })}/>
+                <CardMedia 
+                  component="img" 
+                  alt={dish.picture} 
+                  height="140" 
+                  image={dish.picture} 
+                  sx={{ objectFit: "cover", h: '10%'  }} 
+                  onChange={(e) => setDish({...dish, picture: e.target.value })}/>
             )}
-              {!dish.picture && (
-                 <CardMedia component="img" alt={dish.picture ? dish.name : ""} height="140" sx={{ objectFit: "contain" }} image={dish.picture ? dish.picture : Image_not_available}/>
-              )}
+            {isImageLoading && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '140px' }}>     
+                <CircularProgress />
+              </Box>
+            )}
+            {!dish.picture && (
+               <CardMedia 
+                 component="img" 
+                 alt={dish.picture ? dish.name : ""} 
+                 height="140" 
+                 sx={{ objectFit: "contain" }} 
+                 image={dish.picture ? dish.picture : Image_not_available}/>
+            )}
               <div style={{position: "absolute", color: "red",top: "50%",left: "50%",transform: "translateX(-50%)",}}>
                 <input
                   accept="image/*"
