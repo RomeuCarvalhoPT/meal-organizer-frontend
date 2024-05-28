@@ -12,6 +12,7 @@ import {
   Fab,
   Typography,
   Button,
+  Divider,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -91,16 +92,16 @@ const AllMenus = () => {
         autoComplete="off"
       >
         <Card>
-          <CardContent>
+          <CardContent sx={{ position: 'relative' }}>
 
             <Fab size="small" color="primary" aria-label="back" onClick={goBack}>
               <ArrowBackIcon />
             </Fab>
-            <Fab size="small" color="primary" aria-label="back" style={{position:"relative", left:"75%"}}>  
+            <Fab size="small" color="primary" aria-label="back" sx={{ position: 'absolute', top: 16, right: 15 }}>  
               <AddIcon onClick={generateMenu} />
             </Fab>
 
-              <Typography variant="h4" component="h3">
+              <Typography variant="h4" component="h3" style={{textAlign: "center"}}>
                 Saved Menus
               </Typography>
             <List>
@@ -131,7 +132,9 @@ const AllMenus = () => {
                   >
                     <DeleteIcon />
                   </IconButton>
+                  <Divider/>
                 </ListItem>
+        
               ))}
             </List>
           </CardContent>

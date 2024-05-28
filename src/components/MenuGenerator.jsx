@@ -84,7 +84,7 @@ const GenerateMenu = () => {
   };
 
   const goBack = () => {
-    history.back();
+    history.goBack();
   };
 
   const handleAddDish = () => {
@@ -119,27 +119,25 @@ const GenerateMenu = () => {
         noValidate
         autoComplete="off"
       >
-        <Card>
+        <Card sx={{ position: 'relative' }}>
           <div style={{ position: "relative" }}>
             <Typography  variant="h6" component="h3" style={{textAlign: "center"}}>
               Compose Menu
             </Typography>
-               <div style={{position: "absolute", color: "red",top: "50%",left: "8%",transform: "translateX(-50%)",}}>
-                  <Fab size="small" color="primary" aria-label="back">
+                  <Fab size="small" color="primary" aria-label="back" style={{position: "absolute",top: "50%",left: "8%",transform: "translateX(-50%)",}}>
                      <ArrowBackIcon onClick={goBack} />
                    </Fab>
-               </div>
              </div>
 
-          <CardContent>
-<Box>
+          <CardContent sx={{ position: 'relative' }}>
+         <Box>
             <NumberInput
               label="Required"
               aria-label="Num Dishes"
               min={1}
               max={10}
               value={numDishes}
-              style={{ width: "13ch", marginLeft: '40px', marginRight: '15px' }}
+              sx={{ width: "13ch", marginLeft: '15%',  position: 'relative'}}
               onChange={(event, val) => setNumDishes(val)}
             />
 
@@ -148,13 +146,14 @@ const GenerateMenu = () => {
               color="primary"
               onClick={handleGenerateMenu}
               disabled={isLoading}
-              style={{  marginLeft: '40px', marginRight: '40px' }}
+              sx={{  marginLeft: '15%', marginRight: '10px', width: "13ch"}}
             >
               Randomize
             </Button>
             <Button
               variant="contained"
               color="primary"
+              sx={{  marginLeft: '15px',  width: "20ch" }}
               onClick={handleAddDish}
             >
               <AddIcon /> Add Dish
