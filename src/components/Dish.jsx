@@ -6,6 +6,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import CircularProgress from '@mui/material/CircularProgress';
 import Image_not_available from '../images/Image_not_available.png';
+import axios from "../api/axios";
 
 
 
@@ -37,10 +38,11 @@ const Dish = () => {
   
   const fetchDishDetails = async () => {
     try {
-      const response = await fetch(apiEndpoint + `/dishes/${id}`, {
+
+      const response = await axios.get(`/dishes/${id}`, {
         method: "GET",
       });
-      const dishData = await response.json();
+      const dishData = response.data;
       setDish(dishData);
       setIsLoading(false);
     } catch (error) {

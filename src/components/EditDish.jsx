@@ -24,6 +24,7 @@
     import Resizer from "./Resizer"; // Import Resizer
     import CircularProgress from '@mui/material/CircularProgress';
 import Image_not_available from '../images/Image_not_available.png';
+import axios from "../api/axios";
 
     
 
@@ -78,8 +79,7 @@ import Image_not_available from '../images/Image_not_available.png';
               formData.append("image", resizedImage, `dish_${id}.jpg`); 
               try {
                 setIsImageLoading(true);
-                const response = await fetch(apiEndpoint +
-                  `/files/upload`,
+                const response = await axios(`/files/upload`,
                   {
                     method: "POST",
                     body: formData,
@@ -91,7 +91,7 @@ import Image_not_available from '../images/Image_not_available.png';
                   throw new Error("Network response was not ok");
                 }
 
-                const data = await response.json(); // Assuming the server responds with JSON containing the URL or identifier of the uploaded image
+                const data = await response.data; // Assuming the server responds with JSON containing the URL or identifier of the uploaded image
                 const newUrl = data.url; // Adjust according to the actual response structure
 // Force reload of the image, even if the URL is the same
                 setDish({ ...dish, picture: `${newUrl}?${Date.now()}`});
@@ -117,10 +117,9 @@ import Image_not_available from '../images/Image_not_available.png';
 
       const fetchDishDetails = async () => {
         try {
-          const response = await fetch(apiEndpoint +
-            `/dishes/${id}`
+          const response = await axios(`/dishes/${id}`
           );
-          const dishData = await response.json();
+          const dishData =  response.data;
           setDish(dishData);
           setIsLoading(false);
         } catch (error) {
@@ -131,10 +130,8 @@ import Image_not_available from '../images/Image_not_available.png';
 
       const fetchIngredients = async () => {
         try {
-          const response = await fetch(apiEndpoint +
-            "/ingredients"
-          );
-          const ingredientData = await response.json();
+          const response = await axios("/ingredients");
+          const ingredientData = response.data;
           setIngredients(ingredientData);
         } catch (error) {
           console.error("Error fetching ingredients:", error);
@@ -153,16 +150,16 @@ import Image_not_available from '../images/Image_not_available.png';
         setIsLoading(true);
         e.preventDefault();
         try {
-          const url = apiEndpoint + `/dishes`;
+          const url = `/dishes`;
           const method = id ? "PUT" : "POST";
-          const response = await fetch(id ? `${url}/${id}` : url, {
+          const response = await axios(id ? `${url}/${id}` : url, {
             method: method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dish),
           });
           if (response.ok) {
             setIsLoading(false);
-            const data = await response.json();
+            const data = response.data;
             history.push(`/dish/${data.id}`);
           } else {
             setIsLoading(false);

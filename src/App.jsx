@@ -1,11 +1,6 @@
-// src/App.js
+// src/App.jsx
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  useHistory,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, useHistory } from "react-router-dom";
 import MenuGenerator from "./components/MenuGenerator";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -21,7 +16,6 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
 import Avatar from "@mui/material/Avatar";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddIcon from "@mui/icons-material/Add";
@@ -30,17 +24,16 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Dish from "./components/Dish";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
+import MenuItem from "@mui/material/MenuItem";
 import CircularProgress from '@mui/material/CircularProgress';
-
-
+import axios from "./api/axios";
 
 const App = () => {
   const [dishes, setDishes] = useState([]);
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
-  const [anchorEl, setAnchorEl] = useState(null); // State for controlling the dropdown menu
-  const apiEndpoint = window.ENV.API_ENDPOINT;
+  const [anchorEl, setAnchorEl] = useState(null);
+
   useEffect(() => {
     fetchDishes();
   }, []);
@@ -48,12 +41,8 @@ const App = () => {
   const fetchDishes = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(apiEndpoint +
-        "/dishes"
-      );
-      const data = await response.json();
-      setDishes(data);
-
+      const response = await axios.get("/dishes");
+      setDishes(response.data);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching dishes:", error);
@@ -62,27 +51,20 @@ const App = () => {
 
   const handleDelete = async (id) => {
     try {
-
-      await fetch(apiEndpoint +
-        `/dishes/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      await axios.delete(`/dishes/${id}`);
       setDishes(dishes.filter((dish) => dish.id !== id));
-
     } catch (error) {
       console.error("Error deleting dish:", error);
     }
   };
 
-  const handleShowDish = async (id) => {
-    history.push(`/dish/${id}`); // Use template literals for string interpolation
+  const handleShowDish = (id) => {
+    history.push(`/dish/${id}`);
   };
 
-  function handleAddDish() {
+  const handleAddDish = () => {
     history.push("/editDish");
-  }
+  };
 
   const StyledFab = styled(Fab)({
     position: "absolute",
@@ -102,13 +84,12 @@ const App = () => {
   };
 
   const navigateToWeeklyMenu = () => {
-    history.push("/allMenus"); // Adjust the path according to your routing setup
+    history.push("/allMenus");
   };
 
   const navigateToIngredients = () => {
-    history.push("/ingredients"); // Adjust the path according to your routing setup
+    history.push("/ingredients");
   };
-
 
   if (isLoading) {
     return (
@@ -117,7 +98,7 @@ const App = () => {
       </Box>
     );
   }
-  
+
   return (
     <Container maxWidth="sm">
       <React.Fragment>
@@ -136,17 +117,17 @@ const App = () => {
               {dishes.map(({ id, name, picture }) => (
                 <React.Fragment key={id}>
                   <ListItemButton>
-                    <ListItemAvatar onClick={(event) => handleShowDish(id)}>
+                    <ListItemAvatar onClick={() => handleShowDish(id)}>
                       <Avatar alt="Dish Picture" src={picture} />
                     </ListItemAvatar>
                     <ListItemText
                       primary={name}
-                      onClick={(event) => handleShowDish(id)}
+                      onClick={() => handleShowDish(id)}
                     />
                     <Box display="flex" justifyContent="flex-end">
                         <IconButton
                           aria-label="delete"
-                          onClick={(event) => handleDelete(id)}>
+                          onClick={() => handleDelete(id)}>
                           <DeleteIcon />
                         </IconButton>
                     </Box>
@@ -176,13 +157,11 @@ const App = () => {
             <StyledFab
               color="primary"
               aria-label="add"
-              onClick={() => handleAddDish()}
+              onClick={handleAddDish}
             >
               <AddIcon />
             </StyledFab>
             <Box sx={{ flexGrow: 1 }} />
-
-            
           </Toolbar>
         </AppBar>
       </React.Fragment>

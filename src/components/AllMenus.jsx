@@ -15,28 +15,24 @@ import {
   Divider,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import AddIcon from "@mui/icons-material/Add";
-
+import axios from "../api/axios";
 
 const AllMenus = () => {
   const [menus, setMenus] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
-  const apiEndpoint = window.ENV.API_ENDPOINT;
+
   useEffect(() => {
     fetchMenus();
   }, []);
 
   const fetchMenus = async () => {
     try {
-      const response = await fetch(apiEndpoint +
-        "/menus/all"
-      );
-      const menusData = await response.json();
-      setMenus(menusData);
+      const response = await axios.get("/menus/all");
+      setMenus(response.data);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching menus:", error);
@@ -46,13 +42,8 @@ const AllMenus = () => {
 
   const handleDelete = async (menuId) => {
     try {
-      const response = await fetch(
-        `${apiEndpoint}/menus/${menuId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (response.ok) {
+      const response = await axios.delete(`/menus/${menuId}`);
+      if (response.status === 200) {
         setMenus(menus.filter((menu) => menu.id !== menuId));
       } else {
         console.error("Error deleting menu:", response.statusText);
@@ -68,11 +59,11 @@ const AllMenus = () => {
 
   const goBack = () => {
     history.goBack();
-  }
+  };
 
   const generateMenu = () => {
     history.push("/menuGenerator");
-  }
+  };
 
   if (isLoading) {
     return (
@@ -93,36 +84,28 @@ const AllMenus = () => {
       >
         <Card>
           <CardContent sx={{ position: 'relative' }}>
-
             <Fab size="small" color="primary" aria-label="back" onClick={goBack}>
               <ArrowBackIcon />
             </Fab>
-            <Fab size="small" color="primary" aria-label="back" sx={{ position: 'absolute', top: 16, right: 15 }}>  
+            <Fab size="small" color="primary" aria-label="back" sx={{ position: 'absolute', top: 16, right: 15 }}>
               <AddIcon onClick={generateMenu} />
             </Fab>
-
-              <Typography variant="h4" component="h3" style={{textAlign: "center"}}>
-                Saved Menus
-              </Typography>
+            <Typography variant="h4" component="h3" style={{ textAlign: "center" }}>
+              Saved Menus
+            </Typography>
             <List>
               {menus.map((menu) => (
-                <ListItem
-                  key={menu.id}
-                  button
-                  onClick={() => handleMenuClick(menu.id)} >                
+                <ListItem key={menu.id} button onClick={() => handleMenuClick(menu.id)}>
                   <ListItemText
-                    primary={<ul>
-                      {menu.Dishes?.map((dish) => (
-                          <li key={dish.name}>
-                            {dish.name}
-                          </li>
-                      ))}
-                    </ul>}
-                    secondary={`Created at ${new Date(
-                      menu.createdAt
-                    ).toLocaleString()}`}
+                    primary={
+                      <ul>
+                        {menu.Dishes?.map((dish) => (
+                          <li key={dish.name}>{dish.name}</li>
+                        ))}
+                      </ul>
+                    }
+                    secondary={`Created at ${new Date(menu.createdAt).toLocaleString()}`}
                   />
-
                   <IconButton
                     aria-label="delete"
                     onClick={(e) => {
@@ -132,9 +115,8 @@ const AllMenus = () => {
                   >
                     <DeleteIcon />
                   </IconButton>
-                  <Divider/>
+                  <Divider />
                 </ListItem>
-        
               ))}
             </List>
           </CardContent>

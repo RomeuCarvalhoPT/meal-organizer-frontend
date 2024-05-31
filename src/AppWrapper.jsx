@@ -1,6 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import App from './App'; // Adjust the import path as necessary
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Login from './components/Login';
+import ProtectedRoute from './components/ProtectedRoute';
+import App from './App'; 
 import Dish from './components/Dish';
 import EditDish from './components/EditDish'
 import MenuGenerator from './components/MenuGenerator'
@@ -8,22 +10,23 @@ import AllMenus from './components/AllMenus'
 import MenuDetails from './components/MenuDetails'
 import Ingredients from './components/Ingredients'
 
-const AppWrapper = () => {
- return (
-   <Router>
-     <Switch>
-       <Route exact path="/" component={App} />
-       <Route path="/dish/:id" component={Dish} />
-       <Route path="/editDish/:id" component={EditDish} />
-       <Route path="/editDish" component={EditDish} />
-       <Route path="/menuGenerator" component={MenuGenerator} />
-       <Route path="/allMenus" component={AllMenus} />
-       <Route path="/menuDetails/:id" component={MenuDetails} />
-       <Route path="/ingredients" component={Ingredients} />
-       {/* Add more routes as needed */}
-     </Switch>
-   </Router>
- );
-};
+function AppWrapper() {
+  return (
+    <Router>
+         <Switch>
+          <Route path="/login" component={Login} />
+           <ProtectedRoute exact path="/" component={App} />
+           <ProtectedRoute path="/dish/:id" component={Dish} />
+           <ProtectedRoute path="/editDish/:id" component={EditDish} />
+           <ProtectedRoute path="/editDish" component={EditDish} />
+           <ProtectedRoute path="/menuGenerator" component={MenuGenerator} />
+           <ProtectedRoute path="/allMenus" component={AllMenus} />
+           <ProtectedRoute path="/menuDetails/:id" component={MenuDetails} />
+           <ProtectedRoute path="/ingredients" component={Ingredients} />
+           {/* Add more routes as needed */}
+         </Switch>
+    </Router>
+  );
+}
 
 export default AppWrapper;
