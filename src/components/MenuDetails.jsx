@@ -15,7 +15,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
 import Image_not_available from '../images/Image_not_available.png';
-
+import axios from "../api/axios";
 
 const MenuDetails = () => {
   const { id } = useParams();
@@ -23,7 +23,7 @@ const MenuDetails = () => {
   const [menu, setMenu] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   //const apiEndpoint = config.API_ENDPOINT;
-  const apiEndpoint = window.ENV.API_ENDPOINT;
+  
 
   useEffect(() => {
     fetchMenuDetails();
@@ -31,14 +31,13 @@ const MenuDetails = () => {
 
   const fetchMenuDetails = async () => {
     try {
-      const response = await fetch(apiEndpoint +
-        `/menus/${id}`,
+      const response = await axios(`/menus/${id}`,
         {
           method: "GET",
           contentType: "application/json",
         }
       );
-      const menuData = await response.json();
+      const menuData =  response.data;
       setMenu(menuData);
       setIsLoading(false);
     } catch (error) {

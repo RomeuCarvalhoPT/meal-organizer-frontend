@@ -26,6 +26,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from '@mui/material/CircularProgress';
 import Image_not_available from '../images/Image_not_available.png';
+import axios from "../api/axios";
 
 const GenerateMenu = () => {
   const history = useHistory();
@@ -34,28 +35,28 @@ const GenerateMenu = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [availableDishes, setAvailableDishes] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const apiEndpoint = window.ENV.API_ENDPOINT;
+ 
 
   useEffect(() => {
     const fetchAvailableDishes = async () => {
       try {
-        const response = await fetch(apiEndpoint + `/dishes`);
-        const data = await response.json();
+        const response = await axios(`/dishes`);
+        const data =  response.data;
         setAvailableDishes(data);
       } catch (error) {
         console.error("Error fetching dishes:", error);
       }
     };
     fetchAvailableDishes();
-  }, [apiEndpoint]);
+  }, []);
 
   const handleGenerateMenu = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(apiEndpoint + `/menus/generate-menu/${numDishes}`, {
+      const response = await axios(`/menus/generate-menu/${numDishes}`, {
         method: "POST"
       });
-      const menuData = await response.json();
+      const menuData =  response.data;
       setMenuDishes(menuData.dishes);
       setIsLoading(false);
     } catch (error) {
@@ -66,14 +67,14 @@ const GenerateMenu = () => {
   const handleSaveMenu = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(apiEndpoint + `/menus/save`, {
+      const response = await axios(`/menus/save`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ dishes: menuDishes })
       });
-      const responseText = await response.json();
+      const responseText = await response.data;
       setIsLoading(false);
       history.push(`/allMenus`);
     } catch (error) {

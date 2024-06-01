@@ -9,11 +9,13 @@ import MenuGenerator from './components/MenuGenerator'
 import AllMenus from './components/AllMenus'
 import MenuDetails from './components/MenuDetails'
 import Ingredients from './components/Ingredients'
+import Register from './components/Register'
 
 function AppWrapper() {
   return (
     <Router>
          <Switch>
+           <Route path="/register" component={Register} />
           <Route path="/login" component={Login} />
            <ProtectedRoute exact path="/" component={App} />
            <ProtectedRoute path="/dish/:id" component={Dish} />

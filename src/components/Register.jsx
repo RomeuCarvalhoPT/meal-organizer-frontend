@@ -8,23 +8,21 @@ import {
   FormControlLabel,
   Paper,
   Button,
-  Typography
-} from '@mui/material';
-import Container from "@mui/material/Container";
+  Container
+} from '@material-ui/core';
 
-function Login() {
+function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/users/login', { username, password });
-      localStorage.setItem('token', response.data.token);
+      const response = await axios.post('/users/register', { username, password });
       history.push('/');
     } catch (error) {
-      console.error('Login failed', error);
+      console.error('Register failed', error);
     }
   };
 
@@ -33,7 +31,7 @@ function Login() {
     <Grid container justify="center" alignItems="center" style={{ height: '100vh' }}>
       <Grid item xs={12} md={4}>
         <Paper elevation={3} style={{ padding: 20 }}>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleRegister}>
             <TextField
               fullWidth
               label="Username"
@@ -50,11 +48,8 @@ function Login() {
               required
             />
             <Button type="submit" fullWidth variant="contained" color="primary">
-              Login
+              Register
             </Button>
-            <Typography variant="body1" align="center" style={{ marginTop: '10px', cursor: 'pointer' }} onClick={() => history.push('/register')}>
-              Don't have an account? Register
-            </Typography>
           </form>
         </Paper>
       </Grid>
@@ -63,7 +58,7 @@ function Login() {
   );
 
 
-  
+
 }
 
-export default Login;
+export default Register;
