@@ -82,11 +82,11 @@ import axios from "../api/axios";
                 const response = await axios(`/files/upload`,
                   {
                     method: "POST",
-                    body: formData,
+                    data: formData,
                   }
                 );
                   setIsImageLoading(false);
-                if (!response.ok) {
+                if (!(response.status === 200)) {
                   setIsImageLoading(false);
                   throw new Error("Network response was not ok");
                 }
@@ -155,9 +155,9 @@ import axios from "../api/axios";
           const response = await axios(id ? `${url}/${id}` : url, {
             method: method,
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dish),
+            data: dish,
           });
-          if (response.ok) {
+          if (response.status >= 200 && response.status < 300) {
             setIsLoading(false);
             const data = response.data;
             history.push(`/dish/${data.id}`);
@@ -291,6 +291,7 @@ import axios from "../api/axios";
                 <TextField
                   label="Dish Name"
                   value={dish.name}
+                  required
                   onChange={(e) => setDish({ ...dish, name: e.target.value })}
                 />
 

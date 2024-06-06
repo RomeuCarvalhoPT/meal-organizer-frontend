@@ -8,28 +8,38 @@ import {
   FormControlLabel,
   Paper,
   Button,
-  Typography
+  Typography,  
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText
 } from '@mui/material';
 import Container from "@mui/material/Container";
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
   const history = useHistory();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('/users/login', { username, password });
-      localStorage.setItem('token', response.data.token);
-      history.push('/');
+      if(response.status === 200){
+          localStorage.setItem('token', response.data.token);
+          history.push('/');
+      }
     } catch (error) {
       console.error('Login failed', error);
+      setDialogMessage('Login failed');
+      setOpenDialog(true);
     }
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" minWith="sl">
     <Grid container justify="center" alignItems="center" style={{ height: '100vh' }}>
       <Grid item xs={12} md={4}>
         <Paper elevation={3} style={{ padding: 20 }}>
@@ -37,6 +47,7 @@ function Login() {
             <TextField
               fullWidth
               label="Username"
+              autoComplete="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -46,10 +57,12 @@ function Login() {
               label="Password"
               type="password"
               value={password}
+              autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
               required
+              sx={{ marginTop: '15px', marginBottom: '15px' }}
             />
-            <Button type="submit" fullWidth variant="contained" color="primary">
+            <Button type="submit" fullWidth variant="contained" color="primary" >
               Login
             </Button>
             <Typography variant="body1" align="center" style={{ marginTop: '10px', cursor: 'pointer' }} onClick={() => history.push('/register')}>
@@ -59,6 +72,12 @@ function Login() {
         </Paper>
       </Grid>
     </Grid>
+      <Dialog open={openDialog} >
+        <DialogContent>
+          <DialogContentText>{dialogMessage}</DialogContentText>
+          <Button onClick={() => {setOpenDialog(false);}}>Close</Button>
+        </DialogContent>
+      </Dialog>
     </Container>
   );
 

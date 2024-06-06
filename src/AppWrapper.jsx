@@ -25,6 +25,8 @@ function AppWrapper() {
            <ProtectedRoute path="/allMenus" component={AllMenus} />
            <ProtectedRoute path="/menuDetails/:id" component={MenuDetails} />
            <ProtectedRoute path="/ingredients" component={Ingredients} />
+           <ProtectedRoute path="/file" component={Ingredients} />
+           
            {/* Add more routes as needed */}
          </Switch>
     </Router>

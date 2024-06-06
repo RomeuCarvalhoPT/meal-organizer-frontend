@@ -91,6 +91,11 @@ const App = () => {
     history.push("/ingredients");
   };
 
+  const navigateToLogout = () => {
+    localStorage.removeItem('token');
+    history.push('/');
+  };
+
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex' }}>
@@ -153,6 +158,7 @@ const App = () => {
             >
               <MenuItem onClick={navigateToWeeklyMenu}>Weekly Menu</MenuItem>
               <MenuItem onClick={navigateToIngredients}>Ingredients</MenuItem>
+              <MenuItem onClick={navigateToLogout}>Logout</MenuItem>
             </Menu>
             <StyledFab
               color="primary"

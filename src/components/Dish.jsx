@@ -15,10 +15,9 @@ const Dish = () => {
   const { id } = useParams(); // Extract the id from the URL
   const [dish, setDish] = useState({}); // Initialize state with an empty object
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
+  const [dishPicture, setDishPicture] = useState(null);
   const history = useHistory();
-  const apiEndpoint = window.ENV.API_ENDPOINT;
-
-  
+    
 
   const style = {
     py: 0,
@@ -43,10 +42,27 @@ const Dish = () => {
         method: "GET",
       });
       const dishData = response.data;
+      fetchDishImage();
       setDish(dishData);
       setIsLoading(false);
     } catch (error) {
       console.error("Error getting dish:", error);
+      setIsLoading(false);
+    }
+  };
+
+  const fetchDishImage = async () => {
+    try {
+
+      const response = await axios.get(`/files/dish_${id}`, {
+        method: "GET",
+          responseType: 'blob', // Important to set the response type to blob
+      });
+      const imageUrl = URL.createObjectURL(response.data);
+      setDishPicture(imageUrl);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error getting dish image:", error);
       setIsLoading(false);
     }
   };
@@ -76,7 +92,7 @@ return (
     <Card>
       <div style={{ position: "relative" }}>
       {dish.picture && (
-         <CardMedia component="img" alt={dish.picture} height="140" image={dish.picture} sx={{ objectFit: "cover", h: '10%'  }}/>
+         <CardMedia component="img" alt={dish.picture} height="140" image={dishPicture} sx={{ objectFit: "cover", h: '10%'  }}/>
       )}
         {!dish.picture && (
            <CardMedia component="img" alt={dish.picture ? dish.name : ""} height="140" sx={{ objectFit: "contain" }} image={dish.picture ? dish.picture : Image_not_available}/>
