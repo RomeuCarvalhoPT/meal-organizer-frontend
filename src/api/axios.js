@@ -23,24 +23,24 @@ instance.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Clear the token and redirect to login
       localStorage.removeItem('token');
-      //window.location.href = '/login'; // Or use history.push('/login') if you prefer
+      window.location.href = '/login'; // Or use history.push('/login') if you prefer
     }
     return Promise.reject(error);
   }
 );
 
 // Add an interceptor for /files/ to add the authentication token
-instance.interceptors.request.use(
-  (config) => {
-    if (config.url.includes('/files')) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+//instance.interceptors.request.use(
+//(config) => {
+//if (config.url.includes('/files')) {
+//const token = localStorage.getItem('token');
+//if (token) {
+//config.headers.Authorization = `Bearer ${token}`;
+//}
+//}
+//return config;
+//},
+//(error) => Promise.reject(error)
+//);
 
 export default instance;

@@ -1,22 +1,10 @@
 import React, { useState } from 'react';
-import axios from '../api/axios';
 import { useHistory } from 'react-router-dom';
-import {
-  Checkbox,
-  Grid,
-  TextField,
-  FormControlLabel,
-  Paper,
-  Button,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText
-} from '@mui/material';
-import Container from "@mui/material/Container";
+import { Grid, TextField, Paper, Button, Container } from '@mui/material';
+import DialogBox from '../atoms/DialogBox';
+import { registerUser } from '../../services/authService';
 
-function Register() {
+const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
@@ -26,15 +14,14 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/users/register', { username, password });
-      if (response.status === 200){
+      const response = await registerUser(username, password);
+      if (response.status === 200) {
         setDialogMessage('Registration successful!');
-        setOpenDialog(true);
-        
+      } else {
+        setDialogMessage('Registration failed. Please try again.');
       }
-
+      setOpenDialog(true);
     } catch (error) {
-      console.error('Register failed', error);
       setDialogMessage('Registration failed. Please try again.');
       setOpenDialog(true);
     }
@@ -62,22 +49,16 @@ function Register() {
                 required
                 sx={{ marginTop: '15px', marginBottom: '15px' }}
               />
-              <Button type="submit" fullWidth variant="contained" color="primary" >
+              <Button type="submit" fullWidth variant="contained" color="primary">
                 Register
               </Button>
             </form>
           </Paper>
         </Grid>
       </Grid>
-      <Dialog open={openDialog} onClose={() => {setOpenDialog(false); history.push('/');}}>
-        <DialogContent>
-          <DialogContentText>{dialogMessage}</DialogContentText>
-          <Button onClick={() => {setOpenDialog(false); history.push('/');}}>Close</Button>
-        </DialogContent>
-      </Dialog>
-      </Container>
+      <DialogBox open={openDialog} message={dialogMessage} onClose={() => setOpenDialog(false)} />
+    </Container>
   );
-
-}
+};
 
 export default Register;
